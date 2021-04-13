@@ -12,17 +12,17 @@ parameters:
   org:
     type: string
     default: myhelix
-  project-name:
+  project_name:
     type: string
     description: "Project name, must match github repo name"
 
 executor: default
 
 environment:
-  PROJECT_NAME: << paramters.project >>
+  PROJECT_NAME: << parameters.project_name >>
   GOPATH: "/home/circleci/project/go"
 
-working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project-name >>
+working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
 steps:
   - checkout
@@ -34,5 +34,5 @@ steps:
       command: |
         CGO_ENABLED=0 go build -a -tags netgo -ldflags -gs .
   - aws-ecr/build-and-push-image:
-      repo: << parameters.project-name >>
+      repo: << parameters.project_name >>
       tag: "${CIRCLE_SHA1}"
