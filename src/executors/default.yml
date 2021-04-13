@@ -1,11 +1,14 @@
 description: >
-  This is a sample executor using Docker and Node.
-docker:
-  - image: 'cimg/node:<<parameters.tag>>'
+  Docker Golang executor
+
 parameters:
-  tag:
-    default: lts
+  golang_version_short:
     description: >
-      Pick a specific circleci/node image variant:
-      https://hub.docker.com/r/cimg/node/tags
-    type: string
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
+    type: enum
+    enum: ['1.13', '1.14', '1.15', '1.16']
+
+docker:
+  - image: cimg/go:<< parameters.golang_version_short >>

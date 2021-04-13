@@ -3,9 +3,11 @@ description: >
 
 parameters:
   golang_version_short:
+    description: >
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
     type: enum
-    # NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
-    # While we don't have a direct dependency here, other steps do.
     enum: ['1.13', '1.14', '1.15', '1.16']
   org:
     type: string
@@ -14,9 +16,7 @@ parameters:
     type: string
     description: "Project name, must match github repo name"
 
-executor:
-  docker:
-    - image: cimg/go:<< parameters.golang_version_short >>
+executor: default
 
 environment:
   PROJECT_NAME: << paramters.project >>
