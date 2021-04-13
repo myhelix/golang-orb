@@ -1,0 +1,43 @@
+description: >
+  Glide and then run tests
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  golang_version:
+    type: enum
+    # NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2']
+  org:
+    type: string
+    default: myhelix
+  project-name:
+    type: string
+    description: "Project name, must match github repo name"
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+
+environment:
+  ENVIRONMENT: << parameters.environment >>
+  GOENV_VERSION: << parameters.golang_version >>
+  PROJECT_NAME: << paramters.project-name >>
+
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project-name >>
+
+steps:
+  - checkout
+  - run:
+      name: setup golang
+      command: goenv version
+  - glideInstall
+  - run:
+      name: manual go test -- NOTE not respecting test_type yet!!!
+      command: |
+        go test -race -count=1 -coverprofile=cover-source.out   -p 1 -covermode=atomic  .
