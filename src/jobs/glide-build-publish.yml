@@ -16,9 +16,7 @@ parameters:
     type: string
     description: "Project name, must match github repo name"
 
-executor:
-  default:
-    golang_version_short: << parameters.golang_version_short >>
+executor: default
 
 environment:
   PROJECT_NAME: << parameters.project_name >>
