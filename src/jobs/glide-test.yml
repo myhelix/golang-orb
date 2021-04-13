@@ -27,7 +27,7 @@ resource_class: << parameters.org >>/<< parameters.environment >>
 environment:
   ENVIRONMENT: << parameters.environment >>
   GOENV_VERSION: << parameters.golang_version >>
-  PROJECT_NAME: << paramters.project_name >>
+  PROJECT_NAME: << parameters.project_name >>
 
 working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
@@ -36,7 +36,7 @@ steps:
   - run:
       name: setup golang
       command: goenv version
-  - glideInstall
+  - glide-install
   - run:
       name: manual go test -- NOTE not respecting test_type yet!!!
       command: |
