@@ -42,7 +42,10 @@ steps:
   - run:
       name: install ginkgo
       command: |
-        [ -z "$(which ginkgo)" ] && go get -u github.com/onsi/ginkgo/ginkgo
+        if [ -z "$(which ginkgo)" ]; then
+          echo "Installing ginkgo"
+          go get -u github.com/onsi/ginkgo/ginkgo
+        fi
   - run:
       name: run test
       command: <<include(scripts/test.sh)>>
