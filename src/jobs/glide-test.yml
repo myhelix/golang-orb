@@ -29,6 +29,7 @@ environment:
   ENVIRONMENT: << parameters.environment >>
   GOENV_VERSION: << parameters.golang_version >>
   PROJECT_NAME: << parameters.project_name >>
+  TEST_TYPE: <<parameters.test_type>>
 
 working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
@@ -39,6 +40,9 @@ steps:
       command: goenv version
   - glide-install
   - run:
-      name: manual go test -- NOTE not respecting test_type yet!!!
+      name: install ginkgo
       command: |
-        go test -race -count=1 -coverprofile=cover-source.out   -p 1 -covermode=atomic  .
+        [ -z "$(which ginkgo)" ] && go get -u github.com/onsi/ginkgo/ginkgo
+  - run:
+      name: run test
+      command: <<include(scripts/test.sh)>>
