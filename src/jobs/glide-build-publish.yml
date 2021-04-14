@@ -34,7 +34,7 @@ steps:
   - run:
       name: go build
       command: |
-        CGO_ENABLED=0 go build -a -tags netgo -ldflags -gs .
+        CGO_ENABLED=0 go build -a -tags netgo -ldflags -s .
   - aws-ecr/build-and-push-image:
       repo: << parameters.project_name >>
       tag: "${CIRCLE_SHA1}"
