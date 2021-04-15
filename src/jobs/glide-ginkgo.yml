@@ -52,8 +52,10 @@ steps:
       command: |
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
+          echo "Running all tests except acceptance tests"
           EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
         else
+          echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
         fi
         ginkgo \
