@@ -1,5 +1,5 @@
 description: >
-  Glide and then run tests
+  Glide and then run tests using ginkgo
 
 parameters:
   environment:
@@ -30,6 +30,7 @@ environment:
   GOENV_VERSION: << parameters.golang_version >>
   PROJECT_NAME: << parameters.project_name >>
   TEST_TYPE: <<parameters.test_type>>
+  GO_ENV: << parameters.environment >>
 
 working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
@@ -46,6 +47,6 @@ steps:
           echo "Installing ginkgo"
           go get -u github.com/onsi/ginkgo/ginkgo
         fi
-  - run:
-      name: run test
-      command: <<include(scripts/test.sh)>>
+    - run:
+        name: run test
+        command: <<include(scripts/test.sh)>>
