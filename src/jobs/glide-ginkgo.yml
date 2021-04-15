@@ -48,5 +48,16 @@ steps:
           go get -u github.com/onsi/ginkgo/ginkgo
         fi
     - run:
-        name: run test
-        command: <<include(scripts/test.sh)>>
+        name: run ginkgo
+        command: |
+          ginkgo \
+            -failFast \
+            -keepGoing \
+            -nodes 4 \
+            -r \
+            -randomizeAllSpecs \
+            -randomizeSuites \
+            -timeout 5m \
+            -cover \
+            -coverprofile cover.out \
+            -skipPackage acceptance
