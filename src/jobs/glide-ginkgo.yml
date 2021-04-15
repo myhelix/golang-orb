@@ -47,17 +47,21 @@ steps:
           echo "Installing ginkgo"
           go get -u github.com/onsi/ginkgo/ginkgo
         fi
-    - run:
-        name: run ginkgo
-        command: |
-          ginkgo \
-            -failFast \
-            -keepGoing \
-            -nodes 4 \
-            -r \
-            -randomizeAllSpecs \
-            -randomizeSuites \
-            -timeout 5m \
-            -cover \
-            -coverprofile cover.out \
-            -skipPackage acceptance
+  - run:
+      name: run ginkgo
+      command: |
+        EXTRA_PARMS=""
+        if [[ 'unit' == "$TEST_TYPE" ]]; then
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+        else
+          EXTRA_PARAMS="acceptance"
+        fi
+        ginkgo \
+          -failFast \
+          -keepGoing \
+          -nodes 4 \
+          -r \
+          -randomizeAllSpecs \
+          -randomizeSuites \
+          -timeout 5m \
+          $EXTRA_PARAMS
