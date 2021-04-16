@@ -63,6 +63,8 @@ steps:
           -keepGoing \
           -nodes 4 \
           -r \
+          -v \
+          -trace \
           -randomizeAllSpecs \
           -randomizeSuites \
           -timeout 5m \
