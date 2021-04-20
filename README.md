@@ -21,7 +21,7 @@ We welcome [issues](https://github.com/myhelix//issues) to and [pull requests](h
 
 ### How to Publish
 * Create and push a branch with your new features.
-* When ready to publish a new production version, create a Pull Request from _feature branch_ to `master`.
+* When ready to publish a new production version, create a Pull Request from _feature branch_ to `main`.
 * The title of the pull request must contain a special semver tag: `[semver:<segement>]` where `<segment>` is replaced by one of the following values.
 
 | Increment | Description|

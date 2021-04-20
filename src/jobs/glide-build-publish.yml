@@ -35,6 +35,10 @@ steps:
       name: go build
       command: |
         CGO_ENABLED=0 go build -a -tags netgo -ldflags -s .
+  - run:
+      name: "export AWS_ECR_ACCOUNT_URL to BASH_ENV"
+      command: echo 'export AWS_ECR_ACCOUNT_URL=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com' >> $BASH_ENV
   - aws-ecr/build-and-push-image:
+      checkout: false
       repo: << parameters.project_name >>
       tag: "${CIRCLE_SHA1}"
