@@ -1,0 +1,35 @@
+description: >
+  The golang version of linting is to run go fmt and then confirm there were no changes.
+
+parameters:
+  golang_version_short:
+    description: >
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
+    type: enum
+    enum: ['1.13', '1.14', '1.15', '1.16']
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+
+executor:
+  name: default
+  golang_version_short: << parameters.golang_version_short >>
+
+environment:
+  PROJECT_NAME: << parameters.project_name >>
+  GOPATH: "/home/circleci/project/go"
+
+working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - checkout
+  - run:
+      name: go lint
+      command: |
+        go fmt ./...
+        git diff --ignore-space-at-eol --exit-code
