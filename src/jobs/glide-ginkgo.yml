@@ -21,6 +21,9 @@ parameters:
     type: enum
     enum: ['acceptance', 'unit']
 
+environment:
+  - GOENV_VERSION: << parameters.golang_version >>
+
 # Use the runner
 machine: true
 resource_class: << parameters.org >>/<< parameters.environment >>
