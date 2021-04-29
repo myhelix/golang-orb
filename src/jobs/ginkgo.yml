@@ -28,10 +28,6 @@ working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.
 
 steps:
   - checkout
-  - run:
-      name: setup golang
-      command: goenv version
-  - glide-install
   - ginkgo:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>
