@@ -9,3 +9,4 @@ display:
 # If your orb requires other orbs, you can import them like this. Otherwise remove the "orbs" stanza.
 orbs:
   aws-ecr: circleci/aws-ecr@6.15.3
+  go: circleci/go@1.6.0

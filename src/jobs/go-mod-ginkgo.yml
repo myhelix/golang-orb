@@ -1,0 +1,39 @@
+description: >
+  Glide and then run tests using ginkgo
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  golang_version:
+    type: enum
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2']
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - checkout
+  - go/load-cache
+  - go/mod-download
+  - go/save-cache
+  - ginkgo:
+      environment: << parameters.environment >>
+      golang_version: << parameters.golang_version >>
+      project_name: << parameters.project_name >>
+      org: << parameters.org >>
+      test_type: <<parameters.test_type>>
