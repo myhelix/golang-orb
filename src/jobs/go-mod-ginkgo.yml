@@ -13,6 +13,7 @@ parameters:
   go_env:
     type: string
     description: "Set the environment Variable GO_ENV"
+    default: ""
   org:
     type: string
     default: myhelix
