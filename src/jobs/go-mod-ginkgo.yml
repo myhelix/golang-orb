@@ -10,6 +10,9 @@ parameters:
     enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2']
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
   org:
     type: string
     default: myhelix
@@ -23,6 +26,8 @@ parameters:
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
+  GO_ENV: << parameters.go_env >>
+  PROJECT: << parameters.project_name >>
 
 # Use the runner
 machine: true
