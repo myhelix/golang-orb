@@ -1,0 +1,11 @@
+parameters:
+  source_dir:
+    type: string
+    default: "lambdas"
+    description: "directory which contains your go code"
+steps:
+  - run:
+      environment:
+        SOURCE_DIR: <<parameters.source_dir>>
+      name: Build and package bins
+      command: make -f <<include(scripts/Makefile.build)>> build
