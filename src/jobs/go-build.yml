@@ -34,4 +34,4 @@ working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>
 
 steps:
   - checkout
-  - go_build
+  - go-build
