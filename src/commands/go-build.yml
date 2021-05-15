@@ -11,4 +11,17 @@ steps:
       command: |
         mkdir -p out
         mkdir -p artifacts
-        go list ./$SOURCE_DIR/... | sed "s|.*/$SOURCE_DIR/||"  | tr '/' '_' | CGO_ENABLED=0 GOOS=linux parallel --jobs 9 go build -a -installsuffix cgo -o out/{} $SOURCE_DIR/{}/*.go '&&' touch -t 198001010000 out/{} '&&' zip -Xj artifacts/{}.zip out/{} '&&' zip -ur artifacts/{}.zip config
+        go list ./$SOURCE_DIR/... \
+          | sed "s|.*/$SOURCE_DIR/||"  \
+          | tr '/' '_' \
+          | CGO_ENABLED=0 \
+          GOOS=linux \
+          parallel \
+          --jobs 9 \
+          go build \
+          -a \
+          -installsuffix cgo \
+          -o out/{} $SOURCE_DIR/{}/*.go \
+          '&&' touch -t 198001010000 out/{} \
+          '&&' zip -Xj artifacts/{}.zip out/{} \
+          '&&' zip -ur artifacts/{}.zip config
