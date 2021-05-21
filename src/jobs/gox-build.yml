@@ -22,11 +22,15 @@ parameters:
     type: string
     default: lambdas
   attach_at:
+    type: string
     description: Workspace to attach
     default: "."
   persist_at:
+    type: string
     description: Where to persist your zipped go binaries
-    default: "."
+    default: "/tmp/workspace"
+
+resource_class: xlarge
 
 executor:
   name: default
@@ -39,13 +43,14 @@ steps:
   - attach_workspace:
       at: << parameters.attach_at >>
   - checkout
-  - go-build:
+  - gox-build:
       source_dir: << parameters.source_dir >>
   - run:
       name: Move files to workspace
-        mkdir -p << paramters.persist_at >>
+      command: |
+        mkdir -p << parameters.persist_at >>
         mv artifacts << parameters.persist_at >>/
   - persist_to_workspace:
-      root: << paramters.persist_at >>
+      root: << parameters.persist_at >>
       paths:
         - artifacts

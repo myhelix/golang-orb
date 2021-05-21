@@ -1,0 +1,25 @@
+parameters:
+  source_dir:
+    type: string
+    default: "lambdas"
+    description: "directory which contains your go code"
+steps:
+  - run:
+      name: go get gox
+      command: |
+        which gox || go get -u github.com/mitchellh/gox
+  - run:
+      name: create output dir
+      command:  |
+        mkdir -p out
+        mkdir -p artifacts
+  - run:
+      name: build lambdas
+      environment:
+        SOURCE_DIR: <<parameters.source_dir>>
+      command: |
+        gox -osarch="linux/amd64" -output=out/"{{.Dir}}" ./$SOURCE_DIR/...
+        for i in $(ls out); do
+          zip -Xj artifacts/"$i".zip out/"$i"
+          zip -ur artifacts/"$i".zip config
+        done
