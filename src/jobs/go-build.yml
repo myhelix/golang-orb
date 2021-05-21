@@ -9,6 +9,7 @@ parameters:
       While we don't have a direct dependency here, other steps do.
     type: enum
     enum: ['1.13', '1.14', '1.15', '1.16']
+    default: '1.15'
   org:
     type: string
     default: myhelix
@@ -20,7 +21,12 @@ parameters:
       the directory with the source code
     type: string
     default: lambdas
-
+  attach_at:
+    description: Workspace to attach
+    default: "."
+  persist_at:
+    description: Where to persist your zipped go binaries
+    default: "."
 
 executor:
   name: default
@@ -28,10 +34,18 @@ executor:
 
 environment:
   PROJECT_NAME: << parameters.project_name >>
-  GOPATH: "/home/circleci/project/go"
-
-working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
 steps:
+  - attach_workspace:
+      at: << parameters.attach_at >>
   - checkout
-  - go-build
+  - go-build:
+      source_dir: << parameters.source_dir >>
+  - run:
+      name: Move files to workspace
+        mkdir -p << paramters.persist_at >>
+        mv artifacts << parameters.persist_at >>/
+  - persist_to_workspace:
+      root: << paramters.persist_at >>
+      paths:
+        - artifacts
