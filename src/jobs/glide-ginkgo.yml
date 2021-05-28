@@ -41,3 +41,7 @@ steps:
       project_name: << parameters.project_name >>
       org: << parameters.org >>
       test_type: <<parameters.test_type>>
+  # First we need to generate junit.xml files, then we should collect them using something like
+  # https://circleci.com/docs/2.0/collect-test-data/
+  # - store_test_results:
+  #     path: test-results
