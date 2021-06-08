@@ -29,7 +29,10 @@ working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.
 steps:
   - checkout
   - run:
-      name: run goose
+      name: hops --version
+      command: hops --version
+  - run:
+      name: goose up
       command: |
         set -euxo pipefail
         eval "$(hops db config -f goose -e "$ENVIRONMENT" -s "$PROJECT_NAME" -u migration)"
