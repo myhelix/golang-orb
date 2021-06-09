@@ -1,5 +1,5 @@
 description: >
-  Run tests using the myhelix test script for go projects
+  Run ginkgo tests on a standard circleci build agent
 
 parameters:
   golang_version_short:
