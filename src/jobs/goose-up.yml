@@ -27,6 +27,7 @@ environment:
 working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
 steps:
+  - sanitize-identity
   - checkout
   - run:
       name: hops --version
