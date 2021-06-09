@@ -1,0 +1,6 @@
+description: >
+  Sanitize aws identity. Just in case.
+steps:
+  - run:
+      name: santitize aws identity
+      command: rm -rf ~/.aws
