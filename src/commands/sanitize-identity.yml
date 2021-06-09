@@ -1,10 +1,5 @@
 description: >
   Sanitize aws identity. Just in case.
-parameters:
-  environment:
-    description: what runner to run on
-    type: string
-
 steps:
   - run:
       name: santitize aws identity
