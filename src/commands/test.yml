@@ -1,0 +1,55 @@
+description: >
+  Run tests
+parameters:
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+steps:
+  - aws-cli/setup
+  - run:
+      name: install ginkgo
+      command: |
+        if [ -z "$(which ginkgo)" ]; then
+          echo "Installing ginkgo"
+          go get github.com/onsi/ginkgo/ginkgo
+        fi
+  - run:
+      name: Act as AWS admin
+      command: |
+        # Manually assume role to get temporary aws credentials
+        assume_creds=$(aws sts assume-role --role-session-name $CIRCLE_USERNAME-circleci --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/CiDeployer)
+        echo "export AWS_ACCESS_KEY_ID=$(echo $assume_creds | jq -r .Credentials.AccessKeyId)" >> $BASH_ENV
+        echo "export AWS_SECRET_ACCESS_KEY=$(echo $assume_creds | jq -r .Credentials.SecretAccessKey)" >> $BASH_ENV
+        echo "export AWS_SESSION_TOKEN=$(echo $assume_creds | jq -r .Credentials.SessionToken)" >> $BASH_ENV
+        echo "export AWS_SDK_LOAD_CONFIG=1" >> $BASH_ENV
+  - run:
+      name: setup env
+      command: |
+        echo "export GO_ENV=${ENVIRONMENT}" >> $BASH_ENV
+        echo "export PROJECT=${PROJECT_NAME:=$CIRCLE_PROJECT_REPONAME}" >> $BASH_ENV
+  - run:
+      name: list env
+      command: env
+  - run:
+      name: run ginkgo
+      environment:
+        TEST_TYPE: <<parameters.test_type>>
+      command: |
+        EXTRA_PARMS=""
+        if [[ 'unit' == "$TEST_TYPE" ]]; then
+          echo "Running all tests except acceptance tests"
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+        else
+          echo "Running acceptance tests"
+          EXTRA_PARAMS="acceptance"
+        fi
+        ginkgo \
+          -failFast \
+          -keepGoing \
+          -nodes 4 \
+          -r \
+          -randomizeAllSpecs \
+          -randomizeSuites \
+          -timeout 5m \
+          $EXTRA_PARAMS

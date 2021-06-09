@@ -1,0 +1,56 @@
+description: >
+  Build and zip go binaries
+
+parameters:
+  golang_version_short:
+    description: >
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
+    type: enum
+    enum: ['1.13', '1.14', '1.15', '1.16']
+    default: '1.15'
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  source_dir:
+    description: >
+      the directory with the source code
+    type: string
+    default: lambdas
+  attach_at:
+    type: string
+    description: Workspace to attach
+    default: "."
+  persist_at:
+    type: string
+    description: Where to persist your zipped go binaries
+    default: "/tmp/workspace"
+
+resource_class: xlarge
+
+executor:
+  name: default
+  golang_version_short: << parameters.golang_version_short >>
+
+environment:
+  PROJECT_NAME: << parameters.project_name >>
+
+steps:
+  - attach_workspace:
+      at: << parameters.attach_at >>
+  - checkout
+  - gox-build:
+      source_dir: << parameters.source_dir >>
+  - run:
+      name: Move files to workspace
+      command: |
+        mkdir -p << parameters.persist_at >>
+        mv artifacts << parameters.persist_at >>/
+  - persist_to_workspace:
+      root: << parameters.persist_at >>
+      paths:
+        - artifacts
