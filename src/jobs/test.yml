@@ -18,6 +18,10 @@ parameters:
     type: string
     description: "Project name, must match github repo name"
     default: ""
+  ginkgo_params:
+    type: string
+    default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 executor:
   name: default
@@ -35,5 +39,6 @@ steps:
   - go/save-cache
   - test:
       test_type: << parameters.test_type >>
+      ginkgo_params: << parameters.ginkgo_params >>
   - store_test_results:
       path: test-results
