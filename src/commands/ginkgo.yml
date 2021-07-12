@@ -20,6 +20,10 @@ parameters:
     description: The test type to run.
     type: enum
     enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 steps:
   - run:
@@ -53,12 +57,4 @@ steps:
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
         fi
-        ginkgo \
-          -failFast \
-          -keepGoing \
-          -nodes 4 \
-          -r \
-          -randomizeAllSpecs \
-          -randomizeSuites \
-          -timeout 5m \
-          $EXTRA_PARAMS
+        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS

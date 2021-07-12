@@ -20,6 +20,10 @@ parameters:
     description: The test type to run.
     type: enum
     enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 environment:
   - GOENV_VERSION: << parameters.golang_version >>
@@ -42,3 +46,4 @@ steps:
       project_name: << parameters.project_name >>
       org: << parameters.org >>
       test_type: <<parameters.test_type>>
+      ginkgo_params: << parameters.ginkgo_params >>
