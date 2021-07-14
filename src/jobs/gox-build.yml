@@ -46,13 +46,16 @@ steps:
   - gox-build:
       source_dir: << parameters.source_dir >>
   - run:
+      name: ls artifacts
+      command: ls -al artifacts/
+  - run:
       name: Move files to workspace
       command: |
         mkdir -p << parameters.persist_at >>
         mv artifacts << parameters.persist_at >>/
   - run:
-      name: ls artifacts
-      command: ls -al artifacts/
+      name: ls persisted workspace
+      command: ls -al <<parameters.persist_at>>/**/*
   - persist_to_workspace:
       root: << parameters.persist_at >>
       paths:
