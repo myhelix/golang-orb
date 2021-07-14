@@ -50,7 +50,13 @@ steps:
       command: |
         mkdir -p << parameters.persist_at >>
         mv artifacts << parameters.persist_at >>/
+  - run:
+      name: ls artifacts
+      command: ls -al artifacts/
   - persist_to_workspace:
       root: << parameters.persist_at >>
       paths:
         - artifacts
+  - run:
+      name: ls persisted workspace
+      command: ls -al <<parameters.persist_at>>/**/*
