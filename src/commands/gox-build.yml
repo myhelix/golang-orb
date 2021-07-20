@@ -22,4 +22,5 @@ steps:
         for i in $(ls out); do
           zip -Xj artifacts/"$i".zip out/"$i"
           zip -ur artifacts/"$i".zip config || echo "unable to include `config` directory"
+          zip -ur artifacts/"$i".zip content || echo "unable to include `content` directory"
         done
