@@ -34,6 +34,9 @@ environment:
 
 steps:
   - checkout
+  - run:
+      name: use ssh for git config
+      command:  git config --global url."git@github.com:myhelix".insteadOf https://github.com/myhelix
   - go/load-cache
   - go/mod-download
   - go/save-cache
