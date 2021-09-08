@@ -33,6 +33,7 @@ environment:
   PROJECT_NAME: << parameters.project_name >>
 
 steps:
+  - sanitize-identity
   - checkout
   - go/load-cache
   - go/mod-download
