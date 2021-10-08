@@ -16,8 +16,9 @@ parameters:
     type: string
     description: "Project name, must match github repo name"
   upgrade_packages:
-    type: string
+    type: boolean
     description: "update packages in the container"
+    default: false
 
 executor:
   name: default
