@@ -10,4 +10,4 @@ display:
 orbs:
   aws-cli: circleci/aws-cli@2.0.2
   aws-ecr: circleci/aws-ecr@6.15.3
-  go: circleci/go@1.6.0
+  go: circleci/go@1.7.0
