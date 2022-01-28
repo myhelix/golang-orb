@@ -49,8 +49,10 @@ steps:
       name: setup golang
       command: goenv version
   - go/load-cache
+    key: << parameters.cache_key >>
   - go/mod-download
   - go/save-cache
+    key: << parameters.cache_key >>
   - ginkgo:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>
