@@ -36,6 +36,7 @@ steps:
       name: goose up
       command: |
         set -euo pipefail
-        eval "$(hops db config -f goose -e "$ENVIRONMENT" -s "$PROJECT_NAME" -u migration)"
+        hops db config -f goose -e "$ENVIRONMENT" -s "$PROJECT_NAME" -u migration > secrets.sh
+        source secrets.sh
         echo "Running migrations on $PROJECT_NAME@$DB_HOST:$DB_PORT as $DB_USER"
         goose --env "$ENVIRONMENT" up
