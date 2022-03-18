@@ -1,0 +1,51 @@
+description: >
+  Build the golang binary and docker container and then push it to ECR
+
+parameters:
+  golang_version_short:
+    description: >
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
+    type: enum
+    enum: ['1.13', '1.14', '1.15', '1.16']
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  upgrade_packages:
+    type: boolean
+    description: "update packages in the container"
+    default: false
+
+executor:
+  name: default
+  golang_version_short: << parameters.golang_version_short >>
+
+environment:
+  PROJECT_NAME: << parameters.project_name >>
+  GOPATH: "/home/circleci/project/go"
+
+working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - sanitize-identity
+  - when:
+       condition: <<parameters.upgrade_packages>>
+       steps:
+         - run:
+            name: update image
+            command: |
+              sudo apt update && sudo apt upgrade -y
+  - checkout
+  - setup_remote_docker:
+      version: 19.03.13
+  - run:
+      name: go build
+      command: |
+        CGO_ENABLED=0 go build -a -tags netgo -ldflags -s .
+  - aws-ecr/build-and-push-image:
+      repo: << parameters.project_name >>
+      tag: "${CIRCLE_SHA1}"
