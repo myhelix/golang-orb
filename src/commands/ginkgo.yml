@@ -30,12 +30,12 @@ parameters:
 
 steps:
   - run:
-  	  name: determine GO_ENV
+      name: determine GO_ENV
   	  command: |
-  	    if [[ -z "<< parameters.go_env >>"]]; then
-  	      echo "export GO_ENV=<< parameters.environment >>" >> $BASH_ENV
+        if [[ -z "<< parameters.go_env >>"]]; then
+          echo "export GO_ENV=<< parameters.environment >>" >> $BASH_ENV
         else
-  	      echo "export GO_ENV=<< parameters.go_env >>" >> $BASH_ENV
+          echo "export GO_ENV=<< parameters.go_env >>" >> $BASH_ENV
         fi
   - run:
       name: debug #remove later
