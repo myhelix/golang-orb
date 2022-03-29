@@ -27,7 +27,7 @@ parameters:
   go_env:
     type: string
     description: "Set the environment Variable GO_ENV"
-    default: ""
+    default: <<parameters.environment>>
 
 steps:
   - run:
