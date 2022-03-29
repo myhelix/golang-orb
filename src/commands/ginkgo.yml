@@ -29,12 +29,12 @@ steps:
   - run:
       name: setup golang
       environment:
-        GO_ENV: << parameters.environment >>
+        GO_ENV: << parameters.go_env >>
       command: goenv version
   - run:
       name: install ginkgo
       environment:
-        GO_ENV: << parameters.environment >>
+        GO_ENV: << parameters.go_env >>
       command: |
         if [ -z "$(which ginkgo)" ]; then
           echo "Installing ginkgo"
@@ -47,7 +47,7 @@ steps:
         GOENV_VERSION: << parameters.golang_version >>
         PROJECT_NAME: << parameters.project_name >>
         TEST_TYPE: <<parameters.test_type>>
-        GO_ENV: << parameters.environment >>
+        GO_ENV: << parameters.go_env >>
       command: |
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
