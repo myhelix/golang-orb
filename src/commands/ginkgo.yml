@@ -27,9 +27,16 @@ parameters:
   go_env:
     type: string
     description: "Set the environment Variable GO_ENV"
-    default: <<parameters.environment>>
+    default: GOENVORENV
 
 steps:
+  - run:
+      name: set goenv
+      commands: |
+        if [[ -z "<< parameters.go_env >>"]]; then
+          echo "export GOENVORENV=<< parameters.environment >>" >> $BASH_ENV
+          else echo "export GOENVORENV=<< parameters.go_env >>" >> $BASH_ENV
+        fi
   - run:
       name: setup golang
       environment:
