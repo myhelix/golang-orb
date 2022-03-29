@@ -31,7 +31,7 @@ parameters:
 steps:
   - run:
       name: determine GO_ENV
-  	  command: |
+      command: |
         if [[ -z "<< parameters.go_env >>"]]; then
           echo "export GO_ENV=<< parameters.environment >>" >> $BASH_ENV
         else
