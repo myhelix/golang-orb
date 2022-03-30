@@ -27,6 +27,7 @@ parameters:
   go_env:
     type: string
     description: "Set the environment Variable GO_ENV"
+    default: ""
 
 steps:
   - run:
@@ -62,7 +63,6 @@ steps:
         GOENV_VERSION: << parameters.golang_version >>
         PROJECT_NAME: << parameters.project_name >>
         TEST_TYPE: <<parameters.test_type>>
-        GO_ENV: << parameters.go_env >>
       command: |
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then

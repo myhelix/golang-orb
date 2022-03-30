@@ -24,6 +24,9 @@ parameters:
     type: string
     default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  go_env:
+    type: string
+    default: ""
 
 environment:
   - GOENV_VERSION: << parameters.golang_version >>
@@ -47,3 +50,4 @@ steps:
       org: << parameters.org >>
       test_type: <<parameters.test_type>>
       ginkgo_params: << parameters.ginkgo_params >>
+      go_env: << parameters.go_env >>
