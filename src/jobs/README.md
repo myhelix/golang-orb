@@ -48,6 +48,7 @@ workflows:
           name: "Unit Test"
           test_type: unit
           environment: ci
+          go_env: test
           requires:
             - "GooseUp: CI"
 
