@@ -39,18 +39,10 @@ steps:
           echo "export GO_ENV=<< parameters.go_env >>" >> $BASH_ENV
         fi
   - run:
-      name: debug #remove later
-      command: |
-        echo $GO_ENV
-  - run:
       name: setup golang
-      environment:
-        GO_ENV: << parameters.go_env >>
       command: goenv version
   - run:
       name: install ginkgo
-      environment:
-        GO_ENV: << parameters.go_env >>
       command: |
         if [ -z "$(which ginkgo)" ]; then
           echo "Installing ginkgo"
