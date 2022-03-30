@@ -24,17 +24,25 @@ parameters:
     type: string
     default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
+    default: ""
 
 steps:
   - run:
+      name: determine GO_ENV
+      command: |
+        if [[ -z "<< parameters.go_env >>" ]]; then
+          echo "export GO_ENV=<< parameters.environment >>" >> $BASH_ENV
+        else
+          echo "export GO_ENV=<< parameters.go_env >>" >> $BASH_ENV
+        fi
+  - run:
       name: setup golang
-      environment:
-        GO_ENV: << parameters.environment >>
       command: goenv version
   - run:
       name: install ginkgo
-      environment:
-        GO_ENV: << parameters.environment >>
       command: |
         if [ -z "$(which ginkgo)" ]; then
           echo "Installing ginkgo"
@@ -47,7 +55,6 @@ steps:
         GOENV_VERSION: << parameters.golang_version >>
         PROJECT_NAME: << parameters.project_name >>
         TEST_TYPE: <<parameters.test_type>>
-        GO_ENV: << parameters.environment >>
       command: |
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
