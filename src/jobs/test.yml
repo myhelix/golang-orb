@@ -26,7 +26,6 @@ parameters:
 executor:
   name: default
   golang_version_short: << parameters.golang_version_short >>
-  parallelism: 2
 
 resource_class: xlarge
 
