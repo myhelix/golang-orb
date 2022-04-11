@@ -18,7 +18,7 @@ steps:
       environment:
         SOURCE_DIR: <<parameters.source_dir>>
       command: |
-        gox -osarch="linux/amd64" -output=out/"{{.Dir}}" ./$SOURCE_DIR/...
+        gox -osarch="linux/amd64" -parallel=4 -output=out/"{{.Dir}}" ./$SOURCE_DIR/...
         for i in $(ls out); do
           zip -Xj artifacts/"$i".zip out/"$i"
           zip -ur artifacts/"$i".zip config || echo "unable to include `config` directory"
