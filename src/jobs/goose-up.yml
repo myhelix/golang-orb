@@ -36,8 +36,7 @@ steps:
       name: goose up
       command: |
         set -euo pipefail
-        [[ $ENVIRONMENT = master-* ]] && echo "export ENVIRONMENT=${ENVIRONMENT//master-/}" >> $BASH_ENV
-          source $BASH_ENV
+        [[ $ENVIRONMENT = master-* ]] && export ENVIRONMENT=${ENVIRONMENT//master-/}
         eval "$(hops db config -f goose -e "$ENVIRONMENT" -s "$PROJECT_NAME" -u migration)"
         echo "Running migrations on $PROJECT_NAME@$DB_HOST:$DB_PORT as $DB_USER"
         goose --env "$ENVIRONMENT" up
