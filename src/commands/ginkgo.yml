@@ -49,6 +49,9 @@ steps:
           GO111MODULE=on go get github.com/onsi/ginkgo/ginkgo@8382b23d18dbaaff8e5f7e83784c53ebb8ec2f47
         fi
   - run:
+      name: go mod vendor
+      command: go mod vendor
+  - run:
       name: run ginkgo
       environment:
         ENVIRONMENT: << parameters.environment >>
