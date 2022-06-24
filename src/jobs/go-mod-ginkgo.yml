@@ -52,6 +52,9 @@ steps:
       name: setup golang
       command: goenv version
   - go/mod-download
+  - run:
+      name: go mod vendor
+      command: go mod vendor
   - ginkgo:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>
