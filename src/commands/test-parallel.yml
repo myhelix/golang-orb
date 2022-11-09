@@ -49,5 +49,5 @@ steps:
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
         fi
-        echo $(go list ./... | sed -e "s|github.com/myhelix/$CIRCLE_PROJECT_REPONAME/||" | circleci tests split --split-by=timings --timings-type=classname)
-        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS $(go list ./... | sed -e "s|github.com/myhelix/$CIRCLE_PROJECT_REPONAME/||" | circleci tests split --split-by=timings)
+        echo $(go list -f='{{.Dir}}' ./... | circleci tests split --split-by=timings --timings-type=classname)
+        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS $(go list -f='{{.Dir}}' ./... | circleci tests split --split-by=timings)
