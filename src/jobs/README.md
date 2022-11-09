@@ -28,6 +28,35 @@ workflows:
               only: /^feature/.*/
 ```
 
+## golang/test-parallel
+
+Run unit or acceptance tests with ginkgo.  Allow to set parallelism and split ginkgo test
+
+_Note_ this will install the latest version of ginkgo,
+for services that depends on hss, see golang/glide-ginkgo
+
+
+```yaml
+workflows:
+  build:
+    jobs:
+      - golang/test:
+          name: "Test"
+          context: ci
+          test_type: unit
+          parallelism: 10
+
+      - golang/test:
+          context: development
+          name: "Dev Acceptance Test"
+          test_type: acceptance
+          requires:
+            - "Deploy cdk: Development"
+          filters:
+            branches:
+              only: /^feature/.*/
+```
+
 ## golang/glide-ginkgo
 
 Run unit or acceptance tests on a runner with ginkgo.
