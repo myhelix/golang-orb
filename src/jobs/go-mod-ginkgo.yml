@@ -55,7 +55,7 @@ steps:
   - run:
       name: go mod vendor
       command: go mod vendor
-  - ginkgo:
+  - ginkgo-v2:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>
       project_name: << parameters.project_name >>

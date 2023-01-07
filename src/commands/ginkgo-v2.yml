@@ -1,0 +1,67 @@
+description: >
+  Install ginkgo if necessary and run tests
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  golang_version:
+    type: enum
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19']
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all-specs  -randomize-suites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
+    default: ""
+
+steps:
+  - run:
+      name: determine GO_ENV
+      command: |
+        if [[ -z "<< parameters.go_env >>" ]]; then
+          echo "export GO_ENV=<< parameters.environment >>" >> $BASH_ENV
+        else
+          echo "export GO_ENV=<< parameters.go_env >>" >> $BASH_ENV
+        fi
+  - run:
+      name: setup golang
+      command: goenv version
+  - run:
+      name: install ginkgo
+      command: |
+        if [ -z "$(which ginkgo)" ]; then
+          echo "Installing ginkgo"
+          GO111MODULE=on go install github.com/onsi/ginkgo/v2/ginkgo
+        fi
+  - run:
+      name: run ginkgo
+      environment:
+        ENVIRONMENT: << parameters.environment >>
+        GOENV_VERSION: << parameters.golang_version >>
+        PROJECT_NAME: << parameters.project_name >>
+        TEST_TYPE: <<parameters.test_type>>
+      command: |
+        EXTRA_PARMS=""
+        if [[ 'unit' == "$TEST_TYPE" ]]; then
+          echo "Running all tests except acceptance tests"
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+        else
+          echo "Running acceptance tests"
+          EXTRA_PARAMS="acceptance"
+        fi
+        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
