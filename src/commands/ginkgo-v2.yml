@@ -44,9 +44,11 @@ steps:
   - run:
       name: install ginkgo
       command: |
+        which ginkgo
+        goenv version
         if [ -z "$(which ginkgo)" ]; then
           echo "Installing ginkgo"
-          GO111MODULE=on go install github.com/onsi/ginkgo/v2/ginkgo
+          GO111MODULE=on go install github.com/onsi/ginkgo/v2/ginkgo@latest
         fi
   - run:
       name: run ginkgo
@@ -64,4 +66,5 @@ steps:
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
         fi
+        ginkgo version
         ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
