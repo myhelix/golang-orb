@@ -22,7 +22,7 @@ parameters:
     enum: ['acceptance', 'unit']
   ginkgo_params:
     type: string
-    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all-specs  -randomize-suites  -timeout 5m
+    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
   go_env:
     type: string
