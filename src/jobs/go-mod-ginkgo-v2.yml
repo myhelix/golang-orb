@@ -1,0 +1,71 @@
+description: >
+  Glide and then run tests using ginkgo
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  golang_version:
+    type: enum
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19']
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
+    default: ""
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all-specs  -randomize-suites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+
+environment:
+  GOENV_VERSION: << parameters.golang_version >>
+  GO_ENV: << parameters.go_env >>
+  PROJECT: << parameters.project_name >>
+
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - sanitize-identity
+  - checkout
+  - run:
+      name: Set Default GO_ENV and Shims
+      command: |
+        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+        echo 'export GOENV_ROOT="$HOME/.goenv"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/shims:$PATH"' >> $BASH_ENV
+  - run:
+      name: Set AWS_REGION
+      command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
+  - run:
+      name: print golang version
+      command: |
+        echo $GOENV_VERSION
+        go version
+  - go/mod-download
+  - run:
+      name: go mod vendor
+      command: go mod vendor
+  - ginkgo-v2:
+      environment: << parameters.environment >>
+      golang_version: << parameters.golang_version >>
+      project_name: << parameters.project_name >>
+      org: << parameters.org >>
+      test_type: <<parameters.test_type>>
+      ginkgo_params: << parameters.ginkgo_params >>
+      go_env: <<parameters.go_env>>
