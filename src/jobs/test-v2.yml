@@ -20,7 +20,7 @@ parameters:
     default: ""
   ginkgo_params:
     type: string
-    default: --junit-report=report.xml --output-dir=~/test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+    default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 executor:
