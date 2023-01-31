@@ -7,7 +7,7 @@ parameters:
     enum: ['acceptance', 'unit']
   ginkgo_params:
     type: string
-    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5mz
+    default: --junit-report=report.xml --output-dir=~/test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5mz
     description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 steps:
@@ -42,6 +42,7 @@ steps:
         TEST_TYPE: <<parameters.test_type>>
       command: |
         EXTRA_PARMS=""
+        mkdir test-results
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
           EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
