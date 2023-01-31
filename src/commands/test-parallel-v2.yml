@@ -1,0 +1,53 @@
+description: >
+  Run tests
+parameters:
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+
+steps:
+  - aws-cli/setup
+  - run:
+      name: install ginkgo
+      command: |
+        if [ -z "$(which ginkgo)" ]; then
+          echo "Installing ginkgo"
+          go install github.com/onsi/ginkgo/v2/ginkgo@latest
+        fi
+  - run:
+      name: Act as AWS admin
+      command: |
+        # Manually assume role to get temporary aws credentials
+        assume_creds=$(aws sts assume-role --role-session-name "${CIRCLE_USERNAME:-bot}-circleci" --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$ASSUME_AWS_PROFILE)
+        echo "export AWS_ACCESS_KEY_ID=$(echo $assume_creds | jq -r .Credentials.AccessKeyId)" >> $BASH_ENV
+        echo "export AWS_SECRET_ACCESS_KEY=$(echo $assume_creds | jq -r .Credentials.SecretAccessKey)" >> $BASH_ENV
+        echo "export AWS_SESSION_TOKEN=$(echo $assume_creds | jq -r .Credentials.SessionToken)" >> $BASH_ENV
+        echo "export AWS_SDK_LOAD_CONFIG=1" >> $BASH_ENV
+  - run:
+      name: setup env
+      command: |
+        echo "export GO_ENV=${ENVIRONMENT}" >> $BASH_ENV
+        echo "export PROJECT=${PROJECT_NAME:=$CIRCLE_PROJECT_REPONAME}" >> $BASH_ENV
+  - run:
+      name: list env
+      command: env
+  - run:
+      name: run ginkgo
+      environment:
+        TEST_TYPE: <<parameters.test_type>>
+      command: |
+        EXTRA_PARMS=""
+        if [[ 'unit' == "$TEST_TYPE" ]]; then
+          echo "Running all tests except acceptance tests"
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+        else
+          echo "Running acceptance tests"
+          EXTRA_PARAMS="acceptance"
+        fi
+        echo $(go list -f='{{.Dir}}' ./... | circleci tests split --split-by=timings --timings-type=classname)
+        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS $(go list -f='{{.Dir}}' ./... | circleci tests split --split-by=timings)
