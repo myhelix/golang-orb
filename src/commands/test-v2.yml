@@ -51,6 +51,3 @@ steps:
           EXTRA_PARAMS="acceptance"
         fi
         ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
-        ls test-results/
-        cd test-results/
-        pwd

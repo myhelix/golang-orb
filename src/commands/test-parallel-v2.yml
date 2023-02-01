@@ -41,6 +41,7 @@ steps:
       environment:
         TEST_TYPE: <<parameters.test_type>>
       command: |
+        mkdir test-results
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
