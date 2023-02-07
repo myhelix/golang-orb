@@ -26,7 +26,7 @@ parameters:
     enum: ['acceptance', 'unit']
   ginkgo_params:
     type: string
-    default: -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
+    default: --output-dir=test-results/ -failFast  -keepGoing  -nodes 4  -r  -randomizeAllSpecs  -randomizeSuites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 environment:
@@ -43,14 +43,20 @@ steps:
   - sanitize-identity
   - checkout
   - run:
-      name: Set Default GO_ENV
-      command: echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+      name: Set Default GO_ENV and Shims
+      command: |
+        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+        echo 'export GOENV_ROOT="$HOME/.goenv"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/shims:$PATH"' >> $BASH_ENV
   - run:
       name: Set AWS_REGION
       command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
   - run:
-      name: setup golang
-      command: goenv version
+      name: print golang version
+      command: |
+        echo $GOENV_VERSION
+        go version
   - go/mod-download
   - run:
       name: go mod vendor
@@ -63,3 +69,5 @@ steps:
       test_type: <<parameters.test_type>>
       ginkgo_params: << parameters.ginkgo_params >>
       go_env: <<parameters.go_env>>
+  - store_test_results:
+      path: test-results
