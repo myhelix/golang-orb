@@ -41,11 +41,13 @@ steps:
       environment:
         TEST_TYPE: <<parameters.test_type>>
       command: |
-        mkdir test-results
+        if ! [ -d test-results ]; then
+            mkdir test-results
+        fi
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
-          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skip-package acceptance"
         else
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
