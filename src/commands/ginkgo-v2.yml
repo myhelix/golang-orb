@@ -56,11 +56,15 @@ steps:
         PROJECT_NAME: << parameters.project_name >>
         TEST_TYPE: <<parameters.test_type>>
       command: |
+        if [ -d test-results ]; then
+          rm -rf test-results
+        fi
         mkdir test-results
+
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
-          EXTRA_PARAMS="-cover -coverprofile cover.out -skipPackage acceptance"
+          EXTRA_PARAMS="-cover -coverprofile cover.out -skip-package acceptance"
         else
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
