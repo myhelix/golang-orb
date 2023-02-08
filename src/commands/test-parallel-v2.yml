@@ -45,7 +45,7 @@ steps:
           rm -rf test-results
         fi
         mkdir test-results
-        
+
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"

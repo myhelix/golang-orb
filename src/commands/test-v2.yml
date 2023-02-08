@@ -46,7 +46,7 @@ steps:
           rm -rf test-results
         fi
         mkdir test-results
-        
+
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
           EXTRA_PARAMS="-cover -coverprofile cover.out -skip-package acceptance"
