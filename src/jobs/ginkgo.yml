@@ -37,6 +37,7 @@ working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.
 steps:
   - sanitize-identity
   - checkout
+  - assume_oidc_role
   - ginkgo:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>

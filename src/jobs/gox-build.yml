@@ -43,6 +43,7 @@ steps:
   - attach_workspace:
       at: << parameters.attach_at >>
   - checkout
+  - assume_oidc_role
   - gox-build:
       source_dir: << parameters.source_dir >>
   - run:
