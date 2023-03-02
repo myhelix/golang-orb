@@ -10,7 +10,7 @@ steps:
         which gox || go get -u github.com/mitchellh/gox
   - run:
       name: create output dir
-      command:  |
+      command: |
         mkdir -p out
         mkdir -p artifacts
   - run:

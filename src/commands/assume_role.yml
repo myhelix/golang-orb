@@ -1,6 +1,6 @@
 description: >
   This command will configure aws cli to assume oidc role
-    
+
 steps:
   - aws-cli/setup:
       profile-name: "default"

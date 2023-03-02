@@ -33,12 +33,12 @@ working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>
 steps:
   - sanitize-identity
   - when:
-       condition: <<parameters.upgrade_packages>>
-       steps:
-         - run:
-            name: update image
-            command: |
-              sudo apt update && sudo apt upgrade -y
+      condition: <<parameters.upgrade_packages>>
+      steps:
+        - run:
+          name: update image
+          command: |
+            sudo apt update && sudo apt upgrade -y
   - checkout
   - assume_role
   - setup_remote_docker:
