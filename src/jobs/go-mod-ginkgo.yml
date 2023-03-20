@@ -42,7 +42,6 @@ working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.
 steps:
   - sanitize-identity
   - checkout
-  # - assume_oidc_role
   - run:
       name: Set Default GO_ENV
       command: echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
