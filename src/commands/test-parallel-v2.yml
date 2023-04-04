@@ -11,7 +11,7 @@ parameters:
     description: "flags to add to the ginkgo command (see ginkgo -h)"
 
 steps:
-  - aws-cli/setup
+  - assume_oidc_role
   - run:
       name: install ginkgo
       command: |
@@ -19,15 +19,6 @@ steps:
           echo "Installing ginkgo"
           go install github.com/onsi/ginkgo/v2/ginkgo@latest
         fi
-  - run:
-      name: Act as AWS admin
-      command: |
-        # Manually assume role to get temporary aws credentials
-        assume_creds=$(aws sts assume-role --role-session-name "${CIRCLE_USERNAME:-bot}-circleci" --role-arn arn:aws:iam::$AWS_ACCOUNT_ID:role/$ASSUME_AWS_PROFILE)
-        echo "export AWS_ACCESS_KEY_ID=$(echo $assume_creds | jq -r .Credentials.AccessKeyId)" >> $BASH_ENV
-        echo "export AWS_SECRET_ACCESS_KEY=$(echo $assume_creds | jq -r .Credentials.SecretAccessKey)" >> $BASH_ENV
-        echo "export AWS_SESSION_TOKEN=$(echo $assume_creds | jq -r .Credentials.SessionToken)" >> $BASH_ENV
-        echo "export AWS_SDK_LOAD_CONFIG=1" >> $BASH_ENV
   - run:
       name: setup env
       command: |
