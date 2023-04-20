@@ -1,14 +1,6 @@
 description: >
-  Docker Golang executor
+  This is the default executor using the ubuntu-2004:202010-01 vm.
 
-parameters:
-  golang_version_short:
-    description: >
-      The version of the golang executor to use.
-      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
-      While we don't have a direct dependency here, other steps do.
-    type: enum
-    enum: ['1.13', '1.14', '1.15', '1.16', '1.18', '1.19']
-
-docker:
-  - image: cimg/go:<< parameters.golang_version_short >>
+machine:
+  image: ubuntu-2004:202010-01
+  docker_layer_caching: true
