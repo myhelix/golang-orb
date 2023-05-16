@@ -22,7 +22,7 @@ parameters:
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
     type: enum
-    enum: ["1.17", "1.18", "1.19"]
+    enum: ["1.18", "1.19"]
   org:
     type: string
     default: "myhelix"
