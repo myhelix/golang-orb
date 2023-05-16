@@ -1,0 +1,80 @@
+description: >
+  Glide and then run tests using ginkgo
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  flag_filter_override:
+    description: >
+      A filter expression value for the -label-filter argument. Use this or test_type, not both.
+    type: string
+    default: ""
+  ginkgo_params:
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+    type: string
+    default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+  go_env:
+    description: "Set the environment Variable GO_ENV"
+    type: string
+    default: ""
+  golang_version:
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+    type: enum
+    enum: ['1.17', '1.18', '1.19']
+  org:
+    type: string
+    default: "myhelix"
+  project_name:
+    description: "Project name, must match github repo name"
+    type: string
+  test_type:
+    description: The test type to run. Use this or flag_filter_override, not both.
+    type: enum
+    enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance", ""]
+    default: ""
+
+environment:
+  GOENV_VERSION: << parameters.golang_version >>
+  GO_ENV: << parameters.go_env >>
+  PROJECT: << parameters.project_name >>
+
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - sanitize-identity
+  - checkout
+  - run:
+      name: Set Default GO_ENV and Shims
+      command: |
+        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+        echo 'export GOENV_ROOT="$HOME/.goenv"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/shims:$PATH"' >> $BASH_ENV
+  - run:
+      name: Set AWS_REGION
+      command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
+  - run:
+      name: print golang version
+      command: |
+        echo $GOENV_VERSION
+        go version
+  - go/mod-download
+  - run:
+      name: go mod vendor
+      command: go mod vendor
+  - ginkgo-v2-flags:
+      environment: << parameters.environment >>
+      flag_filter_override: << parameters.flag_filter_override >>
+      ginkgo_params: << parameters.ginkgo_params >>
+      go_env: <<parameters.go_env>>
+      golang_version: << parameters.golang_version >>
+      org: << parameters.org >>
+      project_name: << parameters.project_name >>
+      test_type: <<parameters.test_type>>
+  - store_test_results:
+      path: test-results
