@@ -1,17 +1,17 @@
 description: >
-  Install ginkgo v2 and run tests using flags
+  Install ginkgo v2 and run tests using ginkgo labels
 
 parameters:
   environment:
     description: what runner to run on
     type: string
-  flag_filter_override:
+  label_filter_override:
     description: >
       A filter expression value for the -label-filter argument. Use this or test_type, not both.
     type: string
     default: ""
   ginkgo_params:
-    description: "flags to add to the ginkgo command (see ginkgo -h)"
+    description: "command line flags to add to when the ginkgo command is run (see ginkgo -h)"
     type: string
     default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m -cover -coverprofile cover.out
   go_env:
@@ -30,7 +30,7 @@ parameters:
     description: "Project name, must match github repo name"
     type: string
   test_type:
-    description: The test type to run. Use this or flag_filter_override, not both.
+    description: The test type to run. Use this or label_filter_override, not both.
     type: enum
     enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance", ""]
     default: ""
@@ -55,5 +55,5 @@ steps:
         PROJECT_NAME: << parameters.project_name >>
         GINKGO_PARAMS: << parameters.ginkgo_params >>
         TEST_TYPE: << parameters.test_type >>
-        FLAG_FILTER_OVERRIDE: << parameters.flag_filter_override >>
-      command: << include(scripts/ginkgo_v2/run_ginkgo_with_flags.sh) >>
+        LABEL_FILTER_OVERRIDE: << parameters.label_filter_override >>
+      command: << include(scripts/ginkgo_v2/run_ginkgo_with_labels.sh) >>

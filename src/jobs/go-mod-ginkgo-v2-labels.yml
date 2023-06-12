@@ -5,13 +5,13 @@ parameters:
   environment:
     description: what runner to run on
     type: string
-  flag_filter_override:
+  label_filter_override:
     description: >
       A filter expression value for the -label-filter argument. Use this or test_type, not both.
     type: string
     default: ""
   ginkgo_params:
-    description: "flags to add to the ginkgo command (see ginkgo -h)"
+    description: "command line flags to add to when the ginkgo command is run (see ginkgo -h)"
     type: string
     default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
   go_env:
@@ -30,7 +30,7 @@ parameters:
     description: "Project name, must match github repo name"
     type: string
   test_type:
-    description: The test type to run. Use this or flag_filter_override, not both.
+    description: The test type to run. Use this or label_filter_override, not both.
     type: enum
     enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance", ""]
     default: ""
@@ -67,9 +67,9 @@ steps:
   - run:
       name: go mod vendor
       command: go mod vendor
-  - ginkgo-v2-flags:
+  - ginkgo-v2-labels:
       environment: << parameters.environment >>
-      flag_filter_override: << parameters.flag_filter_override >>
+      label_filter_override: << parameters.label_filter_override >>
       ginkgo_params: << parameters.ginkgo_params >>
       go_env: <<parameters.go_env>>
       golang_version: << parameters.golang_version >>
