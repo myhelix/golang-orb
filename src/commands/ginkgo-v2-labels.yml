@@ -1,0 +1,58 @@
+description: >
+  Install ginkgo v2 and run tests using ginkgo labels
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  label_filter_override:
+    description: >
+      A filter expression value for the -label-filter argument. Use this or test_type, not both.
+    type: string
+    default: ""
+  ginkgo_params:
+    description: "command line flags to add to when the ginkgo command is run (see ginkgo -h)"
+    type: string
+    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m -cover -coverprofile cover.out
+  go_env:
+    description: "Set the environment Variable GO_ENV"
+    type: string
+    default: ""
+  golang_version:
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+    type: enum
+    enum: ["1.18", "1.19"]
+  org:
+    type: string
+    default: "myhelix"
+  project_name:
+    description: "Project name, must match github repo name"
+    type: string
+  test_type:
+    description: The test type to run. Use this or label_filter_override, not both.
+    type: enum
+    enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance"]
+
+steps:
+  - run:
+      name: determine GO_ENV
+      environment:
+        ENVIRONMENT: << parameters.environment >>
+        GO_ENV: << parameters.go_env >>
+      command: << include(scripts/determine_go_env.sh) >>
+
+  - run:
+      name: install ginkgo v2
+      command: << include(scripts/ginkgo_v2/install_ginkgo_v2.sh) >>
+
+  - run:
+      name: run ginkgo
+      environment:
+        ENVIRONMENT: << parameters.environment >>
+        GOENV_VERSION: << parameters.golang_version >>
+        PROJECT_NAME: << parameters.project_name >>
+        GINKGO_PARAMS: << parameters.ginkgo_params >>
+        TEST_TYPE: << parameters.test_type >>
+        LABEL_FILTER_OVERRIDE: << parameters.label_filter_override >>
+      command: << include(scripts/ginkgo_v2/run_ginkgo_with_labels.sh) >>
