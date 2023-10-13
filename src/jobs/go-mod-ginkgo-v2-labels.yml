@@ -32,8 +32,7 @@ parameters:
   test_type:
     description: The test type to run. Use this or label_filter_override, not both.
     type: enum
-    enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance", ""]
-    default: ""
+    enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance"]
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
