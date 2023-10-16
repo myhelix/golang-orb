@@ -33,4 +33,5 @@ fi
 
 echo "running ginkgo with label filters: ${FILTER_LABELS}"
 ginkgo version
-ginkgo "${GINKGO_PARAMETERS}" -label-filter="${FILTER_LABELS}"
+# shellcheck disable=SC2086
+ginkgo $GINKGO_PARAMETERS -label-filter="${FILTER_LABELS}"
