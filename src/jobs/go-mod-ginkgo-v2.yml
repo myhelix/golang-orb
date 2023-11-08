@@ -71,3 +71,6 @@ steps:
       go_env: <<parameters.go_env>>
   - store_test_results:
       path: test-results
+  - persist_to_workspace:
+      paths:
+        - test-results
