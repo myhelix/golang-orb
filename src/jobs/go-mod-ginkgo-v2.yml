@@ -28,6 +28,14 @@ parameters:
     type: string
     default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  persist_results:
+    description: "Whether or not to persist test results to the workspace"
+    default: false
+    type: boolean
+  persist_at:
+    description: "Where should we persist the workspace"
+    default: "/tmp/workspace/"
+    type: string
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
@@ -71,6 +79,10 @@ steps:
       go_env: <<parameters.go_env>>
   - store_test_results:
       path: test-results
-  - persist_to_workspace:
-      paths:
-        - test-results
+  - when:
+      condition: <<parameters.persist_results>>
+      steps:
+        - persist_to_workspace:
+            root: << parameters.persist_at >>
+            paths:
+              - test-results
