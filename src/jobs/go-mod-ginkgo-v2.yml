@@ -26,7 +26,7 @@ parameters:
     enum: ['acceptance', 'unit']
   ginkgo_params:
     type: string
-    default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+    default: --junit-report=report.xml --json-report=report.json --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
   persist_results:
     description: "Whether or not to persist test results to the workspace"
