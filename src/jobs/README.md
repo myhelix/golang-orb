@@ -4,8 +4,8 @@
 
 Run unit or acceptance tests with ginkgo.
 
-_Note_ this will install the latest version of ginkgo,
-for services that depends on hss, see golang/glide-ginkgo
+_Note_ this will install the latest version of ginkgo.
+For services that depends on hss, see golang/glide-ginkgo.
 
 
 ```yaml
