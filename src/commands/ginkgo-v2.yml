@@ -71,12 +71,12 @@ steps:
         fi
         ginkgo version
         ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
-        ls
+        ls coverage
   - run:
       name: generate cover.html
       command: |
-        ls
-        if [ -f cover.out ]; then
+        ls coverage
+        if [ -f coverage/cover.out ]; then
           mkdir -p coverage
           go tool cover -html=cover.out -o coverage/cover.html
           mv cover.out coverage/cover.out
