@@ -86,6 +86,7 @@ steps:
             name: Move files to workspace
             command: |
               mkdir -p << parameters.persist_at >>
+              rm -rf << parameters.persist_at >>/test-results
               mv test-results << parameters.persist_at >>/
         - persist_to_workspace:
             root: << parameters.persist_at >>
