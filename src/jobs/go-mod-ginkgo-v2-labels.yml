@@ -80,7 +80,7 @@ steps:
   - run:
       name: Filter and store coverage
       command: |
-        if [ -d test-results/cover.out ]; then
+        if [ -s test-results/cover.out ]; then
           mkdir -p /tmp/artifacts
 
           sed -E -e "/.+\/(main)\.go:.+/d" \
