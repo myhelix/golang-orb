@@ -13,7 +13,7 @@ parameters:
   ginkgo_params:
     description: "command line flags to add to when the ginkgo command is run (see ginkgo -h)"
     type: string
-    default: -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m -cover -coverprofile cover.out
+    default: --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m -cover -coverprofile cover.out
   go_env:
     description: "Set the environment Variable GO_ENV"
     type: string

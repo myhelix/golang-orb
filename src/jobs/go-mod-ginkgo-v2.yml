@@ -79,6 +79,21 @@ steps:
       go_env: <<parameters.go_env>>
   - store_test_results:
       path: test-results
+  - run:
+      name: Filter and store coverage
+      command: |
+        if [ -d test-results/cover.out ]; then
+          mkdir -p /tmp/artifacts
+
+          sed -E -e "/.+\/(main)\.go:.+/d" \
+          -e "/.+mock([A-Za-z0-9_]*)?\.go:.+/d" \
+          -e "/^\s*$/d" test-results/cover.out > filtered-cover.out
+
+          go tool cover -html=filtered-cover.out -o coverage.html
+          mv coverage.html /tmp/artifacts
+        fi
+  - store_artifacts:
+      path: /tmp/artifacts
   - when:
       condition: <<parameters.persist_results>>
       steps:
