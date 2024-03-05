@@ -42,7 +42,7 @@ steps:
   - checkout
   - assume_oidc_role
   - setup_remote_docker:
-      version: 19.03.13
+      version: default
   - glide-install
   - run:
       name: go build
