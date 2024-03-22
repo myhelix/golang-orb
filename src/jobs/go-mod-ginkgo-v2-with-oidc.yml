@@ -5,34 +5,37 @@ parameters:
   environment:
     description: what runner to run on
     type: string
-  label_filter_override:
-    description: >
-      A filter expression value for the -label-filter argument. Use this or test_type, not both.
-    type: string
-    default: ""
-  ginkgo_params:
-    description: "command line flags to add to when the ginkgo command is run (see ginkgo -h)"
-    type: string
-    default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
-  go_env:
-    description: "Set the environment Variable GO_ENV"
-    type: string
-    default: ""
   golang_version:
+    type: enum
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19']
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
-    type: enum
-    enum: ['1.18', '1.19']
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
+    default: ""
   org:
     type: string
-    default: "myhelix"
+    default: myhelix
   project_name:
-    description: "Project name, must match github repo name"
     type: string
+    description: "Project name, must match github repo name"
   test_type:
-    description: The test type to run. Use this or label_filter_override, not both.
+    description: The test type to run.
     type: enum
-    enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance"]
+    enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: --junit-report=report.xml --json-report=report.json --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+  persist_results:
+    description: "Whether or not to persist test results to the workspace"
+    default: false
+    type: boolean
+  persist_at:
+    description: "Where should we persist the workspace"
+    default: "/tmp/workspace/"
+    type: string
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
@@ -47,6 +50,7 @@ working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.
 steps:
   - sanitize-identity
   - checkout
+  - assume_oidc_role
   - run:
       name: Set Default GO_ENV and Shims
       command: |
@@ -66,15 +70,14 @@ steps:
   - run:
       name: go mod vendor
       command: go mod vendor
-  - ginkgo-v2-labels:
+  - ginkgo-v2:
       environment: << parameters.environment >>
-      label_filter_override: << parameters.label_filter_override >>
+      golang_version: << parameters.golang_version >>
+      project_name: << parameters.project_name >>
+      org: << parameters.org >>
+      test_type: <<parameters.test_type>>
       ginkgo_params: << parameters.ginkgo_params >>
       go_env: <<parameters.go_env>>
-      golang_version: << parameters.golang_version >>
-      org: << parameters.org >>
-      project_name: << parameters.project_name >>
-      test_type: <<parameters.test_type>>
   - store_test_results:
       path: test-results
   - run:
@@ -92,3 +95,16 @@ steps:
         fi
   - store_artifacts:
       path: /tmp/artifacts
+  - when:
+      condition: <<parameters.persist_results>>
+      steps:
+        - run:
+            name: Move files to workspace
+            command: |
+              mkdir -p << parameters.persist_at >>
+              rm -rf << parameters.persist_at >>/test-results
+              mv test-results << parameters.persist_at >>/
+        - persist_to_workspace:
+            root: << parameters.persist_at >>
+            paths:
+              - test-results
