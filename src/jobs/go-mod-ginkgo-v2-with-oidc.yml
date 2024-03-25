@@ -1,0 +1,110 @@
+description: >
+  Glide and then run tests using ginkgo
+
+parameters:
+  environment:
+    description: what runner to run on
+    type: string
+  golang_version:
+    type: enum
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19']
+    description: >
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  go_env:
+    type: string
+    description: "Set the environment Variable GO_ENV"
+    default: ""
+  org:
+    type: string
+    default: myhelix
+  project_name:
+    type: string
+    description: "Project name, must match github repo name"
+  test_type:
+    description: The test type to run.
+    type: enum
+    enum: ['acceptance', 'unit']
+  ginkgo_params:
+    type: string
+    default: --junit-report=report.xml --json-report=report.json --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
+    description: "flags to add to the ginkgo command (see ginkgo -h)"
+  persist_results:
+    description: "Whether or not to persist test results to the workspace"
+    default: false
+    type: boolean
+  persist_at:
+    description: "Where should we persist the workspace"
+    default: "/tmp/workspace/"
+    type: string
+
+environment:
+  GOENV_VERSION: << parameters.golang_version >>
+  GO_ENV: << parameters.go_env >>
+  PROJECT: << parameters.project_name >>
+
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+
+steps:
+  - sanitize-identity
+  - checkout
+  - assume_oidc_role
+  - run:
+      name: Set Default GO_ENV and Shims
+      command: |
+        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+        echo 'export GOENV_ROOT="$HOME/.goenv"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> $BASH_ENV
+        echo 'export PATH="$GOENV_ROOT/shims:$PATH"' >> $BASH_ENV
+  - run:
+      name: Set AWS_REGION
+      command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
+  - run:
+      name: print golang version
+      command: |
+        echo $GOENV_VERSION
+        go version
+  - go/mod-download
+  - run:
+      name: go mod vendor
+      command: go mod vendor
+  - ginkgo-v2:
+      environment: << parameters.environment >>
+      golang_version: << parameters.golang_version >>
+      project_name: << parameters.project_name >>
+      org: << parameters.org >>
+      test_type: <<parameters.test_type>>
+      ginkgo_params: << parameters.ginkgo_params >>
+      go_env: <<parameters.go_env>>
+  - store_test_results:
+      path: test-results
+  - run:
+      name: Filter and store coverage
+      command: |
+        if [ -s test-results/cover.out ]; then
+          mkdir -p /tmp/artifacts
+
+          sed -E -e "/.+\/(main)\.go:.+/d" \
+          -e "/.+mock([A-Za-z0-9_]*)?\.go:.+/d" \
+          -e "/^\s*$/d" test-results/cover.out > filtered-cover.out
+
+          go tool cover -html=filtered-cover.out -o coverage.html
+          mv coverage.html /tmp/artifacts
+        fi
+  - store_artifacts:
+      path: /tmp/artifacts
+  - when:
+      condition: <<parameters.persist_results>>
+      steps:
+        - run:
+            name: Move files to workspace
+            command: |
+              mkdir -p << parameters.persist_at >>
+              rm -rf << parameters.persist_at >>/test-results
+              mv test-results << parameters.persist_at >>/
+        - persist_to_workspace:
+            root: << parameters.persist_at >>
+            paths:
+              - test-results
