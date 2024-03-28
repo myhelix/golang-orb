@@ -22,6 +22,10 @@ parameters:
     type: string
     default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  resource_class:
+    default: "xlarge"
+    description: Type of the resource class
+    type: string
 
 executor:
   name: default
