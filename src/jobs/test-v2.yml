@@ -27,7 +27,7 @@ executor:
   name: default
   golang_version_short: << parameters.golang_version_short >>
 
-resource_class: xlarge
+resource_class: << parameters.resource_class >>>
 
 environment:
   PROJECT_NAME: << parameters.project_name >>
