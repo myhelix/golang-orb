@@ -22,12 +22,16 @@ parameters:
     type: string
     default: --junit-report=report.xml --output-dir=test-results/ -fail-fast  -keep-going  -nodes 4  -r  -randomize-all  -randomize-suites  -timeout 5m
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  resource_class:
+    default: xlarge
+    description: Type of the resource class
+    type: string
 
 executor:
   name: default
   golang_version_short: << parameters.golang_version_short >>
 
-resource_class: xlarge
+resource_class: << parameters.resource_class >>
 
 environment:
   PROJECT_NAME: << parameters.project_name >>
