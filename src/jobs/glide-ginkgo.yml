@@ -41,7 +41,7 @@ steps:
   - checkout
   - run:
       name: setup golang
-      command: goenv version
+      command: whoami && goenv version
   - glide-install
   - ginkgo:
       environment: << parameters.environment >>
