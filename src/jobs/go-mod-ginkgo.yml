@@ -49,8 +49,8 @@ steps:
       name: Set AWS_REGION
       command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
   - run:
-      name: setup golang
-      command: goenv version
+      name: setup golang test
+      command: whoami && goenv version
   - go/mod-download
   - run:
       name: go mod vendor
