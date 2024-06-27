@@ -44,7 +44,7 @@ steps:
   - checkout
   - run:
       name: Set Default GO_ENV
-      command: | 
+      command: |
         echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
         echo $GO_ENV
   - run:
