@@ -44,10 +44,17 @@ steps:
   - checkout
   - run:
       name: Set Default GO_ENV
-      command: echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+      command: | 
+        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
+        echo $GO_ENV
   - run:
       name: Set AWS_REGION
       command: echo 'export AWS_REGION=${AWS_REGION:-us-east-1}' >> $BASH_ENV
+  - run:
+      name: print golang version
+      command: |
+        echo $GOENV_VERSION
+        go version
   - run:
       name: setup golang
       command: goenv version
