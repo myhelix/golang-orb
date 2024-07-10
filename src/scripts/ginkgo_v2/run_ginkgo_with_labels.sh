@@ -1,4 +1,4 @@
-if [[ "${GINKGO_PARAMETERS}" == *"-label-filters"* ]]; then
+if [[ "${GINKGO_PARAMS}" == *"-label-filters"* ]]; then
   echo "please set label-filters using label_filter_override"
   exit 1
 fi
@@ -31,7 +31,9 @@ if [[ ${HAS_LABEL_FILTERS} == false ]]; then
   echo "no label filters found: please set label filters with test_type or label_filter_override."
 fi
 
-echo "running ginkgo with label filters: ${FILTER_LABELS}"
+echo "running ginkgo with:
+  label-filter=${FILTER_LABELS}
+  parameters: $GINKGO_PARAMS"
 ginkgo version
 # shellcheck disable=SC2086
-ginkgo $GINKGO_PARAMETERS -label-filter="${FILTER_LABELS}"
+ginkgo $GINKGO_PARAMS -label-filter="${FILTER_LABELS}"
