@@ -30,7 +30,7 @@ parameters:
 
 executor:
   name: default
-  golang_version_short: << parameters.golang_version_short >>
+  golang_version_short: 1.15
 
 environment:
   - GOENV_VERSION: << parameters.golang_version >>
