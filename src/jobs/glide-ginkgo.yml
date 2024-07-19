@@ -28,8 +28,14 @@ parameters:
     type: string
     default: ""
 
+executor:
+  name: default
+  golang_version_short: << parameters.golang_version_short >>
+
 environment:
   - GOENV_VERSION: << parameters.golang_version >>
+  - PROJECT_NAME: << parameters.project_name >>
+  - GOPATH: "/home/circleci/project/go"
 
 # Use the runner
 machine: true
