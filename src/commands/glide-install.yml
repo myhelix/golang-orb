@@ -1,11 +1,12 @@
 description: >
   Check for a glide.yaml file and then run glide.
+
 steps:
   - run:
       name: glide install
       command: |
         if [[ -e glide.yaml ]]; then
-          cmd
+          pwd
           if [[ -z "$(which glide)" ]]; then
             GLIDE_VERSION=v0.13.1
             echo "Installing Glide $GLIDE_VERSION"
