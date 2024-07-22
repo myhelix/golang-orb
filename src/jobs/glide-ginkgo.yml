@@ -35,22 +35,20 @@ parameters:
     type: string
     default: ""
 
-executor:
-  name: default
-  golang_version_short: << parameters.golang_version_short >>
-
 environment:
-  PROJECT_NAME: << parameters.project_name >>
-  GOPATH: "/home/circleci/project/go"
+  GOENV_VERSION: << parameters.golang_version >>
+  GO_ENV: << parameters.go_env >>
+  PROJECT: << parameters.project_name >>
 
-working_directory: /home/circleci/project/go/src/github.com/<< parameters.org >>/<< parameters.project_name >>
+# Use the runner
+machine: true
+resource_class: << parameters.org >>/<< parameters.environment >>
+working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
 steps:
   - sanitize-identity
   - checkout
   - assume_oidc_role
-  - setup_remote_docker:
-      version: default
   - glide-install
   - run:
       name: Set Default GO_ENV and Shims
