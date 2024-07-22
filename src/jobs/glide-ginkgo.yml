@@ -51,9 +51,6 @@ steps:
   - assume_oidc_role
   - setup_remote_docker:
       version: default
-  - run:
-      name: setup golang
-      command: goenv version
   - glide-install
   - ginkgo:
       environment: << parameters.environment >>
