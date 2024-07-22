@@ -44,12 +44,8 @@ steps:
   - assume_oidc_role
   - glide-install
   - run:
-      name: Set Default GO_ENV and Shims
-      command: |
-        echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
-        echo 'export GOENV_ROOT="$HOME/.goenv"' >> $BASH_ENV
-        echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> $BASH_ENV
-        echo 'export PATH="$GOENV_ROOT/shims:$PATH"' >> $BASH_ENV
+      name: Set Default GO_ENV
+      command: echo 'export GO_ENV=${GO_ENV:-$ENVIRONMENT}' >> $BASH_ENV
   - ginkgo:
       environment: << parameters.environment >>
       golang_version: << parameters.golang_version >>
