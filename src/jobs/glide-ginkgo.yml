@@ -10,6 +10,13 @@ parameters:
     enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.17', '1.18', '1.19']
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+  golang_version_short:
+    description: >
+      The version of the golang executor to use.
+      NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
+      While we don't have a direct dependency here, other steps do.
+    type: enum
+    enum: ['1.13', '1.14', '1.15', '1.16', '1.17', '1.18', '1.19']
   org:
     type: string
     default: myhelix
