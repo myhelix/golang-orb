@@ -48,6 +48,9 @@ steps:
       name: go build
       command: |
         CGO_ENABLED=0 go build -a -tags netgo -ldflags -s .
-  - aws-ecr/build-and-push-image:
+  - aws-ecr/build_and_push_image:
+      auth:
+      - assume_oidc_role
+      region: ${AWS_DEFAULT_REGION}
       repo: << parameters.project_name >>
       tag: "${CIRCLE_SHA1}"
