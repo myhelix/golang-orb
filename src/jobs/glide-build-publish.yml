@@ -50,7 +50,7 @@ steps:
         CGO_ENABLED=0 go build -a -tags netgo -ldflags -s .
   - aws-ecr/build_and_push_image:
       auth:
-      - oidc/auth
+      - assume_oidc_role
       region: ${AWS_DEFAULT_REGION}
       repo: << parameters.project_name >>
       tag: "${CIRCLE_SHA1}"
