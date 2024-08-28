@@ -14,7 +14,9 @@ steps:
   - aws-cli/setup
   - run:
       name: install ginkgo
-      command: << include(scripts/ginkgo/install_ginkgo.sh) >>
+      command: |
+        echo "installing ginkgo v2"
+        GO111MODULE=on go install github.com/onsi/ginkgo/v2/ginkgo
   - run:
       name: Act as AWS admin
       command: |
