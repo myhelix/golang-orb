@@ -14,11 +14,7 @@ steps:
   - aws-cli/setup
   - run:
       name: install ginkgo
-      command: |
-        if [ -z "$(which ginkgo)" ]; then
-          echo "Installing ginkgo"
-          go get github.com/onsi/ginkgo/ginkgo
-        fi
+      command: << include(scripts/ginkgo/install_ginkgo.sh) >>
   - run:
       name: Act as AWS admin
       command: |

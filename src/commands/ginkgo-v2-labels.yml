@@ -44,7 +44,7 @@ steps:
 
   - run:
       name: install ginkgo v2
-      command: << include(scripts/ginkgo_v2/install_ginkgo_v2.sh) >>
+      command: << include(scripts/ginkgo/install_ginkgo.sh) >>
 
   - run:
       name: run ginkgo
