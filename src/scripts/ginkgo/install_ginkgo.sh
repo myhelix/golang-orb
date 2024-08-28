@@ -1,4 +1,4 @@
-echo "Installing ginkgo v2"
+echo "Installing ginkgo"
 
 
 MOD_GINKGO_RAW=$(go mod edit -json 2> /dev/null | jq '.Require[] | select(.Path | test("^github.com/onsi/ginkgo.*$")) | {(.Path|tostring) : .Version}' -c | sort -t ':' -k2 -Vr | head -n 1)
