@@ -15,10 +15,8 @@ steps:
   - run:
       name: install ginkgo
       command: |
-        if [ -z "$(which ginkgo)" ]; then
-          echo "Installing ginkgo"
-          go install github.com/onsi/ginkgo/v2/ginkgo@latest
-        fi
+        echo "installing ginkgo v2"
+        GO111MODULE=on go install github.com/onsi/ginkgo/v2/ginkgo
   - run:
       name: Act as AWS admin
       command: |
