@@ -36,6 +36,10 @@ parameters:
     description: "Where should we persist the workspace"
     default: "/tmp/workspace/"
     type: string
+  resource_class:
+    default: xlarge
+    description: Type of the resource class
+    type: string
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
@@ -44,7 +48,7 @@ environment:
 
 # Use the runner
 machine: true
-resource_class: << parameters.org >>/<< parameters.environment >>
+resource_class: << parameters.resource_class >>
 working_directory: /home/circleci/go/<< parameters.golang_version >>/src/github.com/<< parameters.org >>/<< parameters.project_name >>
 
 steps:
