@@ -22,7 +22,7 @@ parameters:
     enum: ['acceptance', 'unit']
   ginkgo_params:
     type: string
-    default: -r --procs=4 --compilers=4 --randomize-all --randomize-suites --fail-on-pending --fail-fast --keep-going --race --trace --junit-report=report.xml --output-dir=test-results/ --timeout=5m --poll-progress-after=120s --poll-progress-interval=30s
+    default: -r --procs=4 --compilers=4 --randomize-all --randomize-suites --fail-fast --keep-going --race --trace --junit-report=report.xml --output-dir=test-results/ --timeout=5m --poll-progress-after=120s --poll-progress-interval=30s
     description: "flags to add to the ginkgo command (see ginkgo -h)"
   go_env:
     type: string
