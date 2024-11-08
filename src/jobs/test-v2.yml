@@ -26,6 +26,12 @@ parameters:
     default: xlarge
     description: Type of the resource class
     type: string
+  use_circleci_ip_ranges:
+    description: "Whether to use the circle ci ip ranges."
+    type: boolean
+    default: false
+
+circleci_ip_ranges: << parameters.use_circleci_ip_ranges >>
 
 executor:
   name: default
