@@ -98,7 +98,7 @@ These are built with lambda in mind, zipped and stored in an artifacts directory
 
 ```yaml
 golang_executor_defaults: &golang_executor_defaults
-  golang_version_short: 1.15
+  golang_version_short: 1.24
   project_name: my-service
 
 workflows:
