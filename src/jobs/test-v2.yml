@@ -12,7 +12,7 @@ parameters:
   test_type:
     description: The test type to run.
     type: enum
-    enum: ['acceptance', 'unit']
+    enum: ['acceptance', 'unit', 'e2e']
   project_name:
     type: string
     description: "Project name, must match github repo name"
