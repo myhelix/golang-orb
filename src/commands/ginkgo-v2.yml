@@ -19,7 +19,7 @@ parameters:
   test_type:
     description: The test type to run.
     type: enum
-    enum: ['acceptance', 'unit']
+    enum: ['acceptance', 'unit', 'e2e']
   ginkgo_params:
     type: string
     default: -r --procs=4 --compilers=4 --randomize-all --randomize-suites --fail-fast --keep-going --race --trace --junit-report=report.xml --json-report=report.json --output-dir=test-results/ --timeout=5m --poll-progress-after=120s --poll-progress-interval=30s
@@ -63,6 +63,9 @@ steps:
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
           EXTRA_PARAMS="--cover --coverprofile cover.out --skip-package=acceptance"
+        elif [[ 'e2e' == "$TEST_TYPE" ]]; then
+          echo "Running E2E tests"
+          EXTRA_PARAMS="e2e"
         else
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
