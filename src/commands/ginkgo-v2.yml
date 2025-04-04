@@ -62,7 +62,7 @@ steps:
         EXTRA_PARMS=""
         if [[ 'unit' == "$TEST_TYPE" ]]; then
           echo "Running all tests except acceptance tests"
-          EXTRA_PARAMS="--cover --coverprofile cover.out --skip-package=acceptance --skip-package=e2e"
+          EXTRA_PARAMS="--cover --coverprofile cover.out --skip-package=acceptance,e2e"
         elif [[ 'e2e' == "$TEST_TYPE" ]]; then
           echo "Running E2E tests"
           EXTRA_PARAMS="e2e"
