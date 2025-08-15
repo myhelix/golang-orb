@@ -7,7 +7,7 @@ parameters:
     type: string
   golang_version:
     type: enum
-    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19', '1.20', '1.21', '1.22', '1.23', '1.24']
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19', '1.20', '1.21', '1.22', '1.23', '1.24', '1.25']
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
   org:
@@ -28,6 +28,10 @@ parameters:
     type: string
     description: "Set the environment Variable GO_ENV"
     default: ""
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 steps:
   - run:
@@ -71,4 +75,4 @@ steps:
           EXTRA_PARAMS="acceptance"
         fi
         ginkgo version
-        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
+        GOEXPERIMENT=<< parameters.goexperiment >> ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
