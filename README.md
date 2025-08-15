@@ -36,3 +36,17 @@ Example: `[semver:major]`
 * On merge, after manual approval, the orb will automatically be published to the Orb Registry.
 
 For further questions/comments about this or other orbs, visit the Orb Category of [CircleCI Discuss](https://discuss.circleci.com/c/orbs).
+
+### Known Issue
+
+You may get this error when pushing a new PR:
+```
+The dev version of myhelix/golang@dev:alpha has expired. Dev versions of orbs are only valid for 90 days after publishing.
+```
+
+If you see this error, you need to publish a dev:alpha version manually. The fix is to run this:
+
+```
+circleci orb pack ./src | circleci orb validate -
+circleci orb pack ./src | circleci orb publish -  myhelix/golang@dev:alpha
+```

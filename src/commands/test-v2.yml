@@ -9,6 +9,10 @@ parameters:
     type: string
     default: -r --procs=4 --compilers=4 --randomize-all --randomize-suites --fail-fast --keep-going --race --trace --junit-report=report.xml --json-report=report.json --output-dir=test-results/ --timeout=5m --poll-progress-after=120s --poll-progress-interval=30s
     description: "flags to add to the ginkgo command (see ginkgo -h)"
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 steps:
   - aws-cli/setup
@@ -55,4 +59,4 @@ steps:
           echo "Running acceptance tests"
           EXTRA_PARAMS="acceptance"
         fi
-        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
+        GOEXPERIMENT=<< parameters.goexperiment >> ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS

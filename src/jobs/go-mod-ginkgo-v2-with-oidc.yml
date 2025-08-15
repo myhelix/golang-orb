@@ -7,7 +7,7 @@ parameters:
     type: string
   golang_version:
     type: enum
-    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19', '1.20', '1.21', '1.22', '1.23', '1.24']
+    enum: ['1.13.15', '1.14.15', '1.15.10', '1.16.2', '1.16.10', '1.17', '1.18', '1.19', '1.20', '1.21', '1.22', '1.23', '1.24', '1.25']
     description: >
       NOTE these are installed by https://github.com/myhelix/circleci-runner/blob/master/lib/circleci-runner-stack.ts#L152..L156
   go_env:
@@ -36,6 +36,10 @@ parameters:
     description: "Where should we persist the workspace"
     default: "/tmp/workspace/"
     type: string
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
@@ -78,6 +82,7 @@ steps:
       test_type: <<parameters.test_type>>
       ginkgo_params: << parameters.ginkgo_params >>
       go_env: <<parameters.go_env>>
+      goexperiment: <<parameters.goexperiment>>
   - store_test_results:
       path: test-results
   - run:
