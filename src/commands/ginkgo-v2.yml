@@ -28,6 +28,10 @@ parameters:
     type: string
     description: "Set the environment Variable GO_ENV"
     default: ""
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 steps:
   - run:
@@ -71,4 +75,4 @@ steps:
           EXTRA_PARAMS="acceptance"
         fi
         ginkgo version
-        ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS
+        GOEXPERIMENT=<< parameters.goexperiment >> ginkgo << parameters.ginkgo_params >> $EXTRA_PARAMS

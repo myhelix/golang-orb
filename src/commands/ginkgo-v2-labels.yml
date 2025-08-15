@@ -33,6 +33,10 @@ parameters:
     description: The test type to run. Use this or label_filter_override, not both.
     type: enum
     enum: ["unit", "integration", "functional", "acceptance", "e2e", "performance"]
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 steps:
   - run:
@@ -51,6 +55,7 @@ steps:
   - run:
       name: run ginkgo
       environment:
+        GOEXPERIMENT: << parameters.goexperiment >>
         ENVIRONMENT: << parameters.environment >>
         GOENV_VERSION: << parameters.golang_version >>
         PROJECT_NAME: << parameters.project_name >>

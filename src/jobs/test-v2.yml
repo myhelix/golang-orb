@@ -29,6 +29,10 @@ parameters:
     description: "Whether to use the circle ci ip ranges."
     type: boolean
     default: false
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 circleci_ip_ranges: << parameters.use_circleci_ip_ranges >>
 
@@ -50,5 +54,6 @@ steps:
   - test-v2:
       test_type: << parameters.test_type >>
       ginkgo_params: << parameters.ginkgo_params >>
+      goexperiment: << parameters.goexperiment >>
   - store_test_results:
       path: test-results

@@ -36,6 +36,10 @@ parameters:
     description: "Where should we persist the workspace"
     default: "/tmp/workspace/"
     type: string
+  goexperiment:
+    type: string
+    default: ""
+    description: "parameter to add GOEXPERIMENT to ginkgo command"
 
 environment:
   GOENV_VERSION: << parameters.golang_version >>
@@ -78,6 +82,7 @@ steps:
       test_type: <<parameters.test_type>>
       ginkgo_params: << parameters.ginkgo_params >>
       go_env: <<parameters.go_env>>
+      goexperiment: <<parameters.goexperiment>>
   - store_test_results:
       path: test-results
   - run:

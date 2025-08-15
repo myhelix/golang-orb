@@ -36,4 +36,4 @@ echo "running ginkgo with:
   parameters: $GINKGO_PARAMS"
 ginkgo version
 # shellcheck disable=SC2086
-ginkgo $GINKGO_PARAMS -label-filter="${FILTER_LABELS}"
+GOEXPERIMENT=$GOEXPERIMENT ginkgo $GINKGO_PARAMS -label-filter="${FILTER_LABELS}"
