@@ -39,11 +39,19 @@ steps:
   - sanitize-identity
   - checkout
   - run:
-      name:
+      name: golangci-lint
       command: |
-        golangci-lint run \
-          --timeout << parameters.timeout >> \
-          --new-from-merge-base << parameters.new_from_merge_base >> \
-          --allow-parallel-runners << parameters.enable_parallel_runners >> \
-          --fast-only << parameters.only_fast_linters >> \
-          $ARGS
+        args=()
+        if << parameters.new_from_merge_base >>; then
+          args+=( '--new-from-merge-base' )
+        fi
+
+        if << parameters.enable_parallel_runners >>; then
+          args+=( '--allow-parallel-runners' )
+        fi
+
+        if << parameters.only_fast_linters >>; then
+          args+=( '--fast-only' )
+        fi
+
+        golangci-lint run ${args[@]} $ARGS
