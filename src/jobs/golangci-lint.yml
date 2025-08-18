@@ -1,0 +1,49 @@
+description: >
+  golangci-lint job
+
+parameters:
+  version:
+    description: >
+      golangci-lint version from https://github.com/golangci/golangci-lint/releases. Default is latest
+    type: string
+    default: ""
+  timeout:
+    description: >
+      Timeout for total golangci-lint execution
+    type: string
+    default: 2m0s
+  new_from_merge_base:
+    description: >
+      Show only new issues created after the best common ancestor
+    type: boolean
+    default: false
+  enable_parallel_runners:
+    description: >
+      Allow multiple parallel golangci-lint instances running
+    type: boolean
+    default: false
+  only_fast_linters:
+    description: >
+      Filter enabled linters to run only fast linters
+    type: boolean
+    default: false
+  args:
+    description: >
+      Any additional arguments to pass to the golangci-lint execution
+    type: string
+    default: ""
+
+docker:
+  - image: golangci/golangci-lint:<< parameters.version >>
+steps:
+  - sanitize-identity
+  - checkout
+  - run:
+      name:
+      command: |
+        golangci-lint run \
+          --timeout << parameters.timeout >> \
+          --new-from-merge-base << parameters.new_from_merge_base >> \
+          --allow-parallel-runners << parameters.enable_parallel_runners >> \
+          --fast-only << parameters.only_fast_linters >> \
+          $ARGS
