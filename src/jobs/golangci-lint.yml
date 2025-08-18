@@ -43,7 +43,7 @@ steps:
       command: |
         args=( '--timeout=<< parameters.timeout >>' )
         if << parameters.new_from_merge_base >>; then
-          args+=( '--new-from-merge-base' )
+          args+=( '--new-from-merge-base=HEAD~' )
         fi
 
         if << parameters.enable_parallel_runners >>; then
@@ -54,5 +54,5 @@ steps:
           args+=( '--fast-only' )
         fi
 
-        echo "executing: golangci-lint run ${args[@]} << parameters.args >>"
+        echo "executing: 'golangci-lint run ${args[@]} << parameters.args >>'"
         golangci-lint run ${args[@]} << parameters.args >>
