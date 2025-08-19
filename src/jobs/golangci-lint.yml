@@ -6,7 +6,7 @@ parameters:
     description: >
       golangci-lint version from https://github.com/golangci/golangci-lint/releases. Default is latest
     type: string
-    default: ""
+    default: "latest"
   timeout:
     description: >
       Timeout for total golangci-lint execution
