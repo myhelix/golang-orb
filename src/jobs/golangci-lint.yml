@@ -54,5 +54,5 @@ steps:
           args+=( '--fast-only' )
         fi
 
-        echo "executing: 'golangci-lint run ${args[@]} << parameters.args >>'"
+        echo "executing v$(golangci-lint version --short): 'golangci-lint run ${args[@]} << parameters.args >>' "
         golangci-lint run ${args[@]} << parameters.args >>
