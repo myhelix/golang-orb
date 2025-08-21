@@ -1,0 +1,58 @@
+description: >
+  golangci-lint job
+
+parameters:
+  version:
+    description: >
+      golangci-lint version from https://github.com/golangci/golangci-lint/releases.
+    type: string
+  timeout:
+    description: >
+      Timeout for total golangci-lint execution
+    type: string
+    default: 2m0s
+  only_changes:
+    description: >
+      Only lint against changes from git revision REV=HEAD~.
+      This is recommended if you're enabling linting on an existing repository
+    type: boolean
+    default: false
+  enable_parallel_runners:
+    description: >
+      Allow multiple parallel golangci-lint instances running
+    type: boolean
+    default: false
+  only_fast_linters:
+    description: >
+      Filter enabled linters to run only fast linters
+    type: boolean
+    default: false
+  args:
+    description: >
+      Any additional arguments to pass to the golangci-lint execution
+    type: string
+    default: ""
+
+docker:
+  - image: golangci/golangci-lint:<< parameters.version >>
+steps:
+  - sanitize-identity
+  - checkout
+  - run:
+      name: golangci-lint
+      command: |
+        args=( '--timeout=<< parameters.timeout >>' )
+        if << parameters.only_changes >>; then
+          args+=( '--new-from-rev=HEAD~' )
+        fi
+
+        if << parameters.enable_parallel_runners >>; then
+          args+=( '--allow-parallel-runners' )
+        fi
+
+        if << parameters.only_fast_linters >>; then
+          args+=( '--fast-only' )
+        fi
+
+        echo "executing v$(golangci-lint version --short): 'golangci-lint run ${args[@]} << parameters.args >>' "
+        golangci-lint run ${args[@]} << parameters.args >>
