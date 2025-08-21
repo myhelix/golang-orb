@@ -6,15 +6,15 @@ parameters:
     description: >
       golangci-lint version from https://github.com/golangci/golangci-lint/releases. Default is latest
     type: string
-    default: "latest"
   timeout:
     description: >
       Timeout for total golangci-lint execution
     type: string
     default: 2m0s
-  new_from_merge_base:
+  only_changes:
     description: >
-      Show only new issues created after the best common ancestor
+      Only lint against changes from git revision REV=HEAD~.
+      This is recommended if you're enabling linting on an existing repository
     type: boolean
     default: false
   enable_parallel_runners:
@@ -42,8 +42,8 @@ steps:
       name: golangci-lint
       command: |
         args=( '--timeout=<< parameters.timeout >>' )
-        if << parameters.new_from_merge_base >>; then
-          args+=( '--new-from-merge-base=HEAD~' )
+        if << parameters.only_changes >>; then
+          args+=( '--new-from-rev=HEAD~' )
         fi
 
         if << parameters.enable_parallel_runners >>; then
