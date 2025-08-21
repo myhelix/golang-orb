@@ -4,7 +4,7 @@ description: >
 parameters:
   version:
     description: >
-      golangci-lint version from https://github.com/golangci/golangci-lint/releases. Default is latest
+      golangci-lint version from https://github.com/golangci/golangci-lint/releases.
     type: string
   timeout:
     description: >
